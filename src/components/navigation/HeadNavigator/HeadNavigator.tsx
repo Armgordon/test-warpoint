@@ -1,31 +1,26 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, Button, ButtonGroup } from '@mui/material';
 
-const TopNavigation: FC = () => {
+const HeadNavigator: FC = () => {
+  const [navState, setNavState] = useState('/');
   const navigate = useNavigate();
   function changeRouteHandler(event: React.MouseEvent<HTMLButtonElement>) {
     navigate(event.currentTarget.value);
+    setNavState(event.currentTarget.value);
   }
   return (
-    <Box
-      style={{
-        display: 'flex',
-        justifyContent: 'flex-start',
-        marginTop: '40px',
-        marginLeft: '40px',
-      }}
-    >
+    <Box>
       <ButtonGroup variant="contained" aria-label="outlined primary button group">
-        <Button value="/" onClick={changeRouteHandler}>
-          Главная
+        <Button value="/" disabled={navState === '/'} onClick={changeRouteHandler}>
+          Конвертер
         </Button>
-        <Button value="/favorites" onClick={changeRouteHandler}>
-          Избранное
+        <Button value="/currlist" disabled={navState === '/currlist'} onClick={changeRouteHandler}>
+          Список валют
         </Button>
       </ButtonGroup>
     </Box>
   );
 };
 
-export default TopNavigation;
+export default HeadNavigator;
