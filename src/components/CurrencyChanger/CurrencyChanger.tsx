@@ -5,7 +5,7 @@ import CurrencyInput from '../CurrencyInput/CurrencyInput';
 
 interface ICurrencyProps {
   currencyLabel: string;
-  currencies: string[];
+  currencies: string[] | undefined;
   amount: number;
   changeAmount: (amount: number) => void;
   currency: string;
@@ -29,12 +29,14 @@ const CurrencyChanger: FC<ICurrencyProps> = ({
       }}
     >
       <CurrencyInput amount={amount} amountSetter={changeAmount} />
-      <CurrencySelect
-        label={currencyLabel}
-        currencies={currencies}
-        selectedCurrency={currency}
-        currencySetter={changeCurrency}
-      />
+      {currencies && (
+        <CurrencySelect
+          label={currencyLabel}
+          currencies={currencies}
+          selectedCurrency={currency}
+          currencySetter={changeCurrency}
+        />
+      )}
     </Box>
   );
 };

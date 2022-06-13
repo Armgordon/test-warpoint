@@ -17,19 +17,23 @@ const CurrencySelect: FC<ICurSelectProps> = ({
   return (
     <FormControl sx={{ m: 1, minWidth: 120 }}>
       <InputLabel>{label}</InputLabel>
-      <Select
-        value={selectedCurrency}
-        label={label}
-        onChange={(event) => currencySetter(event.target.value)}
-      >
-        {currencies.map((curr, index) => {
-          return (
-            <MenuItem key={index} value={curr}>
-              {curr}
-            </MenuItem>
-          );
-        })}
-      </Select>
+      {currencies.length ? (
+        <Select
+          value={selectedCurrency}
+          label={label}
+          onChange={(event) => currencySetter(event.target.value)}
+        >
+          {currencies.map((curr, index) => {
+            return (
+              <MenuItem key={index} value={curr}>
+                {curr}
+              </MenuItem>
+            );
+          })}
+        </Select>
+      ) : (
+        'loading...'
+      )}
     </FormControl>
   );
 };

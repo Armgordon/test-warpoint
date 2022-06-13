@@ -1,29 +1,11 @@
 import React, { FC, useEffect, useRef, useState } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
+import { Box, Paper } from '@mui/material';
 import HeadNavigator from './components/navigation/HeadNavigator/HeadNavigator';
 import Exchanger from './containers/Exchanger/Exchanger';
 import CurrencyList from './containers/CurrList/CurrencyList';
-import { Box, Paper } from '@mui/material';
-import { API_KEY, CRYPTO_CUR, FIAT_CUR } from './const/constants';
 import { ICurrState, IExchangeCryptoCommon } from './containers/CurrList/types';
-
-const fetchExchangeRate = () => {
-  return fetch(
-    `https://min-api.cryptocompare.com/data/pricemulti?fsyms=${CRYPTO_CUR.join(
-      ','
-    )}&tsyms=${FIAT_CUR.join(',')}&api_key=${API_KEY}`
-  ).then((resp) => {
-    return resp.json();
-  });
-};
-
-const fetchCurrencyList = (currency: string) => {
-  return fetch(
-    `https://min-api.cryptocompare.com/data/top/totalvolfull?limit=10&tsym=${currency}&api_key=${API_KEY}`
-  ).then((resp) => {
-    return resp.json();
-  });
-};
+import { fetchCurrencyList, fetchExchangeRate } from './fetcher/fetcher';
 
 const App: FC = () => {
   const exchangeState = useRef<IExchangeCryptoCommon>({} as IExchangeCryptoCommon);
@@ -37,51 +19,29 @@ const App: FC = () => {
     </Routes>
   );
 
-  // Ввиду того, что значения нужны только один раз на входе делам запросы из Апп компонента
   useEffect(() => {
     fetchExchangeRate().then((result) => {
       exchangeState.current = result;
     });
-
-    fetchCurrencyList('USD')
-      .then((result) => {
-        const fetchedState = result.Data.map((currency: any) => {
+    // Ввиду того, что нет прямого API на получение значение по USD и RUB делаем 2 запроса и мержим результат
+    const fetchCurrList = async (): Promise<ICurrState[]> => {
+      const firstPartOfList = await fetchCurrencyList('USD');
+      return await fetchCurrencyList('RUB').then((secondPartOfList) => {
+        return firstPartOfList.map((element: ICurrState, index: number) => {
           return {
-            id: currency.CoinInfo.Id,
-            shortName: currency.CoinInfo.Name,
-            fullName: currency.CoinInfo.FullName,
+            ...element,
             exchange: {
-              ['USD']: Math.round(currency.RAW['USD'].PRICE * 1000) / 1000,
+              ...element.exchange,
+              ...secondPartOfList[index].exchange,
             },
           };
         });
-        return fetchedState;
-      })
-      .then((cratedObjectsArray) => {
-        fetchCurrencyList('RUB').then((result) => {
-          const fetchedState = result.Data.map((currency: any) => {
-            return {
-              id: currency.CoinInfo.Id,
-              shortName: currency.CoinInfo.Name,
-              fullName: currency.CoinInfo.FullName,
-              exchange: {
-                ['RUB']: Math.round(currency.RAW['RUB'].PRICE * 1000) / 1000,
-              },
-            };
-          });
-          const resultedState = cratedObjectsArray.map((element: any, index: number) => {
-            return {
-              ...element,
-              exchange: {
-                ...element.exchange,
-                ...fetchedState[index].exchange,
-              },
-            };
-          });
-
-          setCurrState(resultedState);
-        });
       });
+    };
+    // ЗаСетим стейт после мержа
+    fetchCurrList().then((resultListState) => {
+      setCurrState(resultListState);
+    });
   }, []);
 
   return (

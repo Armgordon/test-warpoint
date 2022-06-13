@@ -7,6 +7,10 @@ interface IExchangeState {
   exchangeIndexes: IExchangeCryptoCommon;
 }
 
+// interface ICurrList {
+//   cryptoCur: string[];
+//   fiatCur: string[];
+// }
 let fiatCur = [] as string[];
 
 const Exchanger: FC<IExchangeState> = ({ exchangeIndexes }) => {
@@ -16,7 +20,7 @@ const Exchanger: FC<IExchangeState> = ({ exchangeIndexes }) => {
   const [fiatCurrency, setFiatCurrency] = useState<string>('USD');
 
   const cryptoCur = Object.keys(exchangeIndexes);
-  if (cryptoCur.length) {
+  if (Object.keys(exchangeIndexes).length !== 0) {
     fiatCur = Object.keys(exchangeIndexes[cryptoCur[0]]);
   }
 
