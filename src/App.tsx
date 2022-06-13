@@ -4,7 +4,7 @@ import { Box, Paper } from '@mui/material';
 import HeadNavigator from './components/navigation/HeadNavigator/HeadNavigator';
 import Exchanger from './containers/Exchanger/Exchanger';
 import CurrencyList from './containers/CurrList/CurrencyList';
-import { ICurrState, IExchangeState } from './containers/CurrList/types';
+import { ICurrState, IExchangeState } from './types';
 import { fetchCurrencyList, fetchExchangeRate } from './fetcher/fetcher';
 
 const App: FC = () => {
@@ -63,6 +63,7 @@ const App: FC = () => {
         flexDirection: { xs: 'column' },
         alignItems: 'center',
         p: { xs: '10px', md: '30px' },
+        paddingTop: { xs: '30px' },
         overflowX: 'hidden',
         height: '100vh',
         boxSizing: 'border-box',

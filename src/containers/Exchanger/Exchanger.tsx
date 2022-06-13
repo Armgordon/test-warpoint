@@ -1,7 +1,7 @@
 import React, { FC, useState } from 'react';
 import { Box, Typography } from '@mui/material';
 import CurrencyChanger from '../../components/CurrencyChanger/CurrencyChanger';
-import { IExchangeCryptoCommon } from '../CurrList/types';
+import { IExchangeCryptoCommon } from '../../types';
 
 interface IExchangeState {
   exchangeIndexes: IExchangeCryptoCommon;
@@ -36,6 +36,7 @@ const Exchanger: FC<IExchangeState> = ({ exchangeIndexes, cryptoCur, fiatCur }) 
     setFiatAmount(cryptoAmount * exchangeIndexes[cryptoCurrency][changedFiatCurrency]);
     setFiatCurrency(changedFiatCurrency);
   };
+  console.log('render Exchanger');
   return (
     <>
       <Typography variant="h2" component="h1" align={'center'} gutterBottom>

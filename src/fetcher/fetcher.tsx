@@ -2,9 +2,7 @@ import { API_KEY, CRYPTO_CUR, FIAT_CUR } from '../const/constants';
 
 export const fetchExchangeRate = () => {
   return fetch(
-    `https://min-api.cryptocompare.com/data/pricemulti?fsyms=${CRYPTO_CUR.join(
-      ','
-    )}&tsyms=${FIAT_CUR.join(',')}&api_key=${API_KEY}`
+    `https://min-api.cryptocompare.com/data/pricemulti?fsyms=${CRYPTO_CUR.toString()}&tsyms=${FIAT_CUR.toString()}&api_key=${API_KEY}`
   ).then((resp) => {
     return resp.json();
   });

@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
-import { ICurrState } from './types';
+import { ICurrState } from '../../types';
 import './CurrencuList.scss';
 
 interface Column {
@@ -29,6 +29,7 @@ interface CurrListProps {
 }
 
 const CurrencyList: FC<CurrListProps> = ({ currencyList }) => {
+  console.log('render CurList');
   return (
     <>
       <Typography variant="h2" component="h1" align={'center'} gutterBottom>
@@ -113,4 +114,4 @@ const CurrencyList: FC<CurrListProps> = ({ currencyList }) => {
   );
 };
 
-export default React.memo(CurrencyList);
+export default CurrencyList;
