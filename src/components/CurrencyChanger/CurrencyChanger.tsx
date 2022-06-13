@@ -5,7 +5,7 @@ import CurrencyInput from '../CurrencyInput/CurrencyInput';
 
 interface ICurrencyProps {
   currencyLabel: string;
-  currencies: string[] | undefined;
+  currencies: string[];
   amount: number;
   changeAmount: (amount: number) => void;
   currency: string;

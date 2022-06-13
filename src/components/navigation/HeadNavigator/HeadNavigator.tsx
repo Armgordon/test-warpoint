@@ -1,10 +1,12 @@
 import React, { FC, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Box, Button, ButtonGroup } from '@mui/material';
 
 const HeadNavigator: FC = () => {
-  const [navState, setNavState] = useState('/');
+  const location = useLocation();
+  const [navState, setNavState] = useState(location.pathname);
   const navigate = useNavigate();
+
   function changeRouteHandler(event: React.MouseEvent<HTMLButtonElement>) {
     navigate(event.currentTarget.value);
     setNavState(event.currentTarget.value);
@@ -23,4 +25,4 @@ const HeadNavigator: FC = () => {
   );
 };
 
-export default HeadNavigator;
+export default React.memo(HeadNavigator);

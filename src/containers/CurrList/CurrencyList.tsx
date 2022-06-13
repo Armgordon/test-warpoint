@@ -113,4 +113,4 @@ const CurrencyList: FC<CurrListProps> = ({ currencyList }) => {
   );
 };
 
-export default CurrencyList;
+export default React.memo(CurrencyList);

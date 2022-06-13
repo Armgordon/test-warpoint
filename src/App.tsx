@@ -1,28 +1,40 @@
-import React, { FC, useEffect, useRef, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { Box, Paper } from '@mui/material';
 import HeadNavigator from './components/navigation/HeadNavigator/HeadNavigator';
 import Exchanger from './containers/Exchanger/Exchanger';
 import CurrencyList from './containers/CurrList/CurrencyList';
-import { ICurrState, IExchangeCryptoCommon } from './containers/CurrList/types';
+import { ICurrState, IExchangeState } from './containers/CurrList/types';
 import { fetchCurrencyList, fetchExchangeRate } from './fetcher/fetcher';
 
 const App: FC = () => {
-  const exchangeState = useRef<IExchangeCryptoCommon>({} as IExchangeCryptoCommon);
-  const [currState, setCurrState] = useState<Array<ICurrState>>([]);
+  const [currListState, setCurrState] = useState<Array<ICurrState>>([]);
+  const [exchangeState, setExchangeState] = useState<IExchangeState>({} as IExchangeState);
 
   const routes = (
     <Routes>
-      <Route path="/currlist" element={<CurrencyList currencyList={currState} />} />
-      <Route path="/" element={<Exchanger exchangeIndexes={exchangeState.current} />} />
+      <Route path="/currlist" element={<CurrencyList currencyList={currListState} />} />
+      <Route
+        path="/"
+        element={
+          <Exchanger
+            exchangeIndexes={exchangeState.commonState}
+            cryptoCur={exchangeState.keyState?.cryptoCur}
+            fiatCur={exchangeState.keyState?.fiatCur}
+          />
+        }
+      />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 
   useEffect(() => {
-    fetchExchangeRate().then((result) => {
-      exchangeState.current = result;
+    fetchExchangeRate().then((resultState) => {
+      const cryptoCur = Object.keys(resultState);
+      const fiatCur = cryptoCur.length !== 0 ? Object.keys(resultState[cryptoCur[0]]) : [];
+      setExchangeState({ commonState: resultState, keyState: { cryptoCur, fiatCur } });
     });
+
     // Ввиду того, что нет прямого API на получение значение по USD и RUB делаем 2 запроса и мержим результат
     const fetchCurrList = async (): Promise<ICurrState[]> => {
       const firstPartOfList = await fetchCurrencyList('USD');

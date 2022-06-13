@@ -38,4 +38,4 @@ const CurrencySelect: FC<ICurSelectProps> = ({
   );
 };
 
-export default CurrencySelect;
+export default React.memo(CurrencySelect);

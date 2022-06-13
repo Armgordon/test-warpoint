@@ -38,6 +38,16 @@ export interface IExchangeCryptoCommon
   [key: string]: IExchangeFiatCommon;
 }
 
+interface IKeysState {
+  cryptoCur: string[];
+  fiatCur: string[];
+}
+
+export interface IExchangeState {
+  commonState: IExchangeCryptoCommon;
+  keyState: IKeysState;
+}
+
 export interface ICurrState {
   id: string;
   shortName: string;

@@ -5,24 +5,15 @@ import { IExchangeCryptoCommon } from '../CurrList/types';
 
 interface IExchangeState {
   exchangeIndexes: IExchangeCryptoCommon;
+  cryptoCur: string[];
+  fiatCur: string[];
 }
 
-// interface ICurrList {
-//   cryptoCur: string[];
-//   fiatCur: string[];
-// }
-let fiatCur = [] as string[];
-
-const Exchanger: FC<IExchangeState> = ({ exchangeIndexes }) => {
+const Exchanger: FC<IExchangeState> = ({ exchangeIndexes, cryptoCur, fiatCur }) => {
   const [cryptoAmount, setCryptoAmount] = useState<number>(0);
   const [cryptoCurrency, setCryptoCurrency] = useState<string>('BTC');
   const [fiatAmount, setFiatAmount] = useState<number>(0);
   const [fiatCurrency, setFiatCurrency] = useState<string>('USD');
-
-  const cryptoCur = Object.keys(exchangeIndexes);
-  if (Object.keys(exchangeIndexes).length !== 0) {
-    fiatCur = Object.keys(exchangeIndexes[cryptoCur[0]]);
-  }
 
   const changeCryptoAmountHandler = (changedCryptoAmount: number): void => {
     setCryptoAmount(changedCryptoAmount);
@@ -45,7 +36,6 @@ const Exchanger: FC<IExchangeState> = ({ exchangeIndexes }) => {
     setFiatAmount(cryptoAmount * exchangeIndexes[cryptoCurrency][changedFiatCurrency]);
     setFiatCurrency(changedFiatCurrency);
   };
-
   return (
     <>
       <Typography variant="h2" component="h1" align={'center'} gutterBottom>
@@ -81,4 +71,4 @@ const Exchanger: FC<IExchangeState> = ({ exchangeIndexes }) => {
   );
 };
 
-export default Exchanger;
+export default React.memo(Exchanger);
